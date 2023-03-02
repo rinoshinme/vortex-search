@@ -74,12 +74,10 @@ class SqliteDB(object):
 class FaissDB(object):
     def __init__(self, 
                  feature_dim=2048, 
-                 index_param='Flat', 
-                 metric='cos', 
+                 index_type='Flat', 
                  index_path=None):
         self.feature_dim = feature_dim
-        self.metric = self.get_metric(metric)
-        self.index_param = index_param
+        self.index_type = index_type
 
         index_folder = os.path.split(index_path)[0]
         if not os.path.exists(index_folder):
@@ -98,14 +96,6 @@ class FaissDB(object):
             feature = np.expand_dims(feature, axis=0)
         distances, indices = self.index.search(feature, topK)
         return distances, indices
-    
-    def get_metric(self, measurement):
-        metric_map = {
-            'cos': faiss.METRIC_INNER_PRODUCT,
-            'l1': faiss.METRIC_L1,
-            'l2': faiss.METRIC_L2,
-        }
-        return metric_map[measurement]
 
     def load_index(self, index_path=None):
         def is_valid(index_path):
@@ -119,7 +109,10 @@ class FaissDB(object):
         
         if not is_valid(index_path):
             # self.index = faiss.index_factory(self.feature_dim, self.index_param, self.metric)
-            self.index = faiss.IndexFlatL2(self.feature_dim)
+            if self.index_type == 'Flat':
+                self.index = faiss.IndexFlatL2(self.feature_dim)
+            else:
+                raise ValueError("index type not supported yet")
         else:
             self.index = faiss.read_index(index_path)
     

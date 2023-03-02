@@ -1,15 +1,17 @@
 import os
 import numpy as np
 import cv2
-from .models import Resnet50
+from .models import get_model
 from .database import FaissDB, SqliteDB
 
 
 class SearchEngine(object):
     def __init__(self, config):
+        # TODO: use md5/rel_path instead of absolute paths
         self.config = config
-        self.feature_extractor = Resnet50()
-        self.faiss_db = FaissDB(index_path=config.FAISS.INDEX_PATH)
+        # self.feature_extractor = Resnet50()
+        self.feature_extractor = get_model(config.MODEL.NAME, config.MODEL.WEIGHTS)
+        self.faiss_db = FaissDB(config.FAISS.FEATURE_DIM, config.FAISS.INDEX_TYPE, config.FAISS.INDEX_PATH)
         self.sqlite_db = SqliteDB(config.SQLITE.DB_PATH, config.SQLITE.TABLE_NAME)
         self.min_similairity = 0.3
     
@@ -27,7 +29,7 @@ class SearchEngine(object):
     def exists(self, image_path):
         return self.sqlite_db.exists(image_path)
     
-    def search_image(self, image_path, topk=1):
+    def search_by_image(self, image_path, topk=1):
         # image = cv2.imdecode(np.fromfile(image_path, dtype=np.uint8), -1)
         feature = self.feature_extractor.extract(image_path)
 
@@ -38,6 +40,9 @@ class SearchEngine(object):
             p = self.sqlite_db.search(index)
             result_paths.append(p)
         return result_paths
+    
+    def search_by_text(self, text, topK=1):
+        pass
     
     def save(self):
         self.faiss_db.save_index(self.config.FAISS.INDEX_PATH)

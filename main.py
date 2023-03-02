@@ -60,7 +60,7 @@ if __name__ == '__main__':
     image_folder = 'D:/data/image_search/00'
     test_add(engine, image_folder)
     # image_path = 'data/liuyifei.png'
-    image_path = 'D:/data/image_search/01/6e/016e3f90b2045dde88ac0c2f4eebc2c8.jpg'
+    image_path = 'data/sample.jpeg'
     test_search(engine, image_path)
 
     # naive_search('D:/data/image_search/00', './data/liuyifei.png')

@@ -1,9 +1,10 @@
-EXTRACTOR:
-  MODEL_NAME: "r50"
-  WEIGHTS_PATH: "data/model.pt"
+MODEL:
+  NAME: "r50"
+  WEIGHTS: "data/model.pt"
 
 FAISS:
   FEATURE_DIM: 2048
+  INDEX_TYPE: "FLAT"
   INDEX_PATH: "data/resnet/resnet.index"
 
 SQLITE:
