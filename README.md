@@ -13,3 +13,8 @@ $ conda install -c pytorch faiss-gpu
 ```
 
 TODO: use yolo onnx for inference.
+
+
+## Models
+- image search: resnet, fingerprinting
+- text search: ibot, mocov3, CLIP

@@ -5,3 +5,5 @@ data/
 *.pth
 *.onnx
 test/
+*.pt
+*.txt.gz

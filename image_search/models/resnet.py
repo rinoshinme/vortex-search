@@ -6,7 +6,7 @@ from torchvision import transforms
 from PIL import Image
 
 
-class Resnet50(object):
+class Resnet50Extractor(object):
     def __init__(self):
         if torch.cuda.is_available():
             self.device = 'cuda'

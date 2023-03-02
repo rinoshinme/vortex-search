@@ -1,6 +1,7 @@
 MODEL:
+  TYPE: "resnet"
   NAME: "r50"
-  WEIGHTS: "data/model.pt"
+  WEIGHTS: ""
 
 FAISS:
   FEATURE_DIM: 2048

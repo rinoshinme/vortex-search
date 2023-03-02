@@ -1,0 +1,16 @@
+MODEL:
+  TYPE: "CLIP"
+  NAME: "ViT-B/32"
+  WEIGHTS: ""
+
+FAISS:
+  FEATURE_DIM: 512
+  INDEX_TYPE: "FLAT"
+  INDEX_PATH: "data/clip/clip.index"
+
+SQLITE:
+  TABLE_NAME: "clip"
+  DB_PATH: "data/clip/clip.db"
+
+MEDIA:
+  MEDIA_ROOT: "D:/data/image_search"

@@ -10,7 +10,7 @@ class SearchEngine(object):
         # TODO: use md5/rel_path instead of absolute paths
         self.config = config
         # self.feature_extractor = Resnet50()
-        self.feature_extractor = get_model(config.MODEL.NAME, config.MODEL.WEIGHTS)
+        self.feature_extractor = get_model(config.MODEL.TYPE, config.MODEL.NAME, config.MODEL.WEIGHTS)
         self.faiss_db = FaissDB(config.FAISS.FEATURE_DIM, config.FAISS.INDEX_TYPE, config.FAISS.INDEX_PATH)
         self.sqlite_db = SqliteDB(config.SQLITE.DB_PATH, config.SQLITE.TABLE_NAME)
         self.min_similairity = 0.3
