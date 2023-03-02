@@ -1,0 +1,14 @@
+EXTRACTOR:
+  MODEL_NAME: "r50"
+  WEIGHTS_PATH: "data/model.pt"
+
+FAISS:
+  FEATURE_DIM: 2048
+  INDEX_PATH: "data/resnet/resnet.index"
+
+SQLITE:
+  TABLE_NAME: "resnet"
+  DB_PATH: "data/resnet/resnet.db"
+
+MEDIA:
+  MEDIA_ROOT: "D:/data/image_search"

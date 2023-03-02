@@ -3,6 +3,8 @@ import hashlib
 import shutil
 
 DATABASE_ROOT = 'D:/data/image_search'
+# DATABASE_ROOT = 'F:/data/image_search'
+
 
 def get_file_md5(file_path):
     with open(file_path, 'rb') as f:
@@ -28,6 +30,7 @@ def make_image_database(image_folder):
             file_path = os.path.join(root, name)
             file_extension = name.split('.')[-1]
             md5_val = get_file_md5(file_path)
+            print(md5_val)
             if len(md5_val) < 4:
                 continue
             sub1 = md5_val[:2]
@@ -43,4 +46,4 @@ def make_image_database(image_folder):
 
 
 if __name__ == '__main__':
-    make_image_database('D:/data/nsfw/raw/Grabber')
+    make_image_database('D:/data/JPEGImages')

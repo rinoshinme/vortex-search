@@ -8,8 +8,12 @@ class SqliteDB(object):
     """
     store faiss id and logo_name pairs
     """
-    def __init__(self, db_path):
-        self.table_name = 'FaissLogo'
+    def __init__(self, db_path, table_name):
+        self.table_name = table_name
+        db_folder = os.path.split(db_path)[0]
+        if not os.path.exists(db_folder):
+            os.makedirs(db_folder)
+        
         self.conn = sqlite3.connect(db_path)
         
         cursor = self.conn.cursor()
@@ -24,6 +28,19 @@ class SqliteDB(object):
     
     def close(self):
         self.conn.close()
+    
+    def exists(self, image_path):
+        """
+        check if a certain image exists in database
+        """
+        command = "select * from {} where ImagePath=\'{}\'".format(self.table_name, image_path)
+        cursor = self.conn.cursor()
+        cursor.execute(command)
+        results = cursor.fetchall()
+        if len(results) == 0:
+            return False
+        else:
+            return True
     
     def insert(self, faiss_id, image_path):
         command = "insert into {} values \
@@ -63,6 +80,10 @@ class FaissDB(object):
         self.feature_dim = feature_dim
         self.metric = self.get_metric(metric)
         self.index_param = index_param
+
+        index_folder = os.path.split(index_path)[0]
+        if not os.path.exists(index_folder):
+            os.makedirs(index_folder)
         self.load_index(index_path)
 
     def insert(self, feature):
@@ -70,7 +91,7 @@ class FaissDB(object):
             feature = np.expand_dims(feature, axis=0)
         self.index.add(feature)
         database_id = self.index.ntotal
-        return database_id
+        return database_id - 1
     
     def search(self, feature, topK=1):
         if len(feature.shape) == 1:
@@ -97,7 +118,8 @@ class FaissDB(object):
             return True
         
         if not is_valid(index_path):
-            self.index = faiss.index_factory(self.feature_dim, self.index_param, self.metric)
+            # self.index = faiss.index_factory(self.feature_dim, self.index_param, self.metric)
+            self.index = faiss.IndexFlatL2(self.feature_dim)
         else:
             self.index = faiss.read_index(index_path)
     

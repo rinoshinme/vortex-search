@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import cv2
 from .models import Resnet50
@@ -9,15 +10,22 @@ class SearchEngine(object):
         self.config = config
         self.feature_extractor = Resnet50()
         self.faiss_db = FaissDB(index_path=config.FAISS.INDEX_PATH)
-        self.sqlite_db = SqliteDB(db_path=config.SQLITE.DB_PATH)
+        self.sqlite_db = SqliteDB(config.SQLITE.DB_PATH, config.SQLITE.TABLE_NAME)
         self.min_similairity = 0.3
     
     def add_image(self, image_path):
+        if self.sqlite_db.exists(image_path):
+            # skip this image if it is already added.
+            return
+        
         # extract feature
         feat = self.feature_extractor.extract(image_path)
         # insert into database
         faiss_id = self.faiss_db.insert(feat)
         self.sqlite_db.insert(faiss_id, image_path)
+    
+    def exists(self, image_path):
+        return self.sqlite_db.exists(image_path)
     
     def search_image(self, image_path, topk=1):
         # image = cv2.imdecode(np.fromfile(image_path, dtype=np.uint8), -1)

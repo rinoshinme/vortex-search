@@ -4,6 +4,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 from image_search import SearchEngine
 from image_search import get_config
+from tools.naive_search import naive_search
 
 
 def is_image_file(image_name):
@@ -17,7 +18,7 @@ def is_image_file(image_name):
         return False
 
 
-def test_add(engine, image_folder):
+def test_add(engine, image_folder, max_count=1000):
     count = 0
     for root, dirs, files in os.walk(image_folder):
         for name in files:
@@ -25,6 +26,8 @@ def test_add(engine, image_folder):
                 continue
             image_path = os.path.join(root, name)
             count += 1
+            if count > max_count:
+                return
             print('adding {}: {}'.format(count, image_path))
             engine.add_image(image_path)
             if count % 100 == 0:
@@ -33,11 +36,11 @@ def test_add(engine, image_folder):
 
 
 def test_search(engine, image_path):
-    results = engine.search_image(image_path, topk=2)
+    results = engine.search_image(image_path, topk=3)
     print(results)
     for r in results:
         image = cv2.imread(r)
-        image = resize_keepratio(image, 0.3)
+        image = resize_keepratio(image, 1.0)
         cv2.imshow('image', image)
         cv2.waitKey(0)
 
@@ -49,21 +52,15 @@ def resize_keepratio(image, scale=0.4):
     return cv2.resize(image, (tw, th))
 
 
-def main():
-    config_path = 'configs/faiss_search.yaml'
+if __name__ == '__main__':
+    config_path = 'configs/resnet.yaml'
     configs = get_config(config_path)
-
     engine = SearchEngine(configs)
-    print(engine.count())
 
-    # add
-    # logo_root = 'D:/data/nsfw/data5_test/0normal'
-    # test_add(engine, logo_root)
-
-    # search
-    image_path = 'D:/data/nsfw/data5_test/2sexy/0nJtAtm.jpg'
+    image_folder = 'D:/data/image_search/00'
+    test_add(engine, image_folder)
+    # image_path = 'data/liuyifei.png'
+    image_path = 'D:/data/image_search/01/6e/016e3f90b2045dde88ac0c2f4eebc2c8.jpg'
     test_search(engine, image_path)
 
-
-if __name__ == '__main__':
-    main()
+    # naive_search('D:/data/image_search/00', './data/liuyifei.png')

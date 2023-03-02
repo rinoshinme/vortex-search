@@ -1,9 +1,0 @@
-EXTRACTOR:
-  MODEL_NAME: "r50"
-  WEIGHTS_PATH: "data/v1/model.pt"
-
-FAISS:
-  INDEX_PATH: "data/v1/faiss_logo.index"
-
-SQLITE:
-  DB_PATH: "data/v1/faiss_logo.db"
