@@ -2,10 +2,11 @@ MODEL:
   TYPE: "resnet"
   NAME: "r50"
   WEIGHTS: ""
+  THRESHOLS: 0.5
 
 FAISS:
   FEATURE_DIM: 2048
-  INDEX_TYPE: "FLAT"
+  INDEX_TYPE: "Flat"
   INDEX_PATH: "data/resnet/resnet.index"
 
 SQLITE:

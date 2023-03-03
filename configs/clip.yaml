@@ -2,10 +2,11 @@ MODEL:
   TYPE: "CLIP"
   NAME: "ViT-B/32"
   WEIGHTS: ""
+  THRESHOLD: 0.2
 
 FAISS:
   FEATURE_DIM: 512
-  INDEX_TYPE: "FLAT"
+  INDEX_TYPE: "Flat"
   INDEX_PATH: "data/clip/clip.index"
 
 SQLITE:

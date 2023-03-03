@@ -60,7 +60,7 @@ class CLIPExtractor(object):
         features = features[0].detach().cpu().numpy()
         return features
     
-    def extract_image(self, image_path):
+    def extract(self, image_path):
         image = Image.open(image_path)
         inputs = self.preprocess(image).unsqueeze(0)
         inputs = inputs.to(self.device)

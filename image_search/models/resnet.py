@@ -25,6 +25,7 @@ class Resnet50Extractor(object):
         ])
     
     def infer(self, image_path):
+        # for testing imagenet classification
         image = Image.open(image_path)
         image = image.convert('RGB')
         inputs = self.transform(image)

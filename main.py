@@ -35,8 +35,15 @@ def test_add(engine, image_folder, max_count=1000):
     engine.save()
 
 
+def resize_keepratio(image, scale=0.4):
+    h, w = image.shape[:2]
+    th = int(h * scale)
+    tw = int(w * scale)
+    return cv2.resize(image, (tw, th))
+
+
 def test_search(engine, image_path):
-    results = engine.search_image(image_path, topk=3)
+    results = engine.search_by_image(image_path, topk=3)
     print(results)
     for r in results:
         image = cv2.imread(r)
@@ -45,22 +52,28 @@ def test_search(engine, image_path):
         cv2.waitKey(0)
 
 
-def resize_keepratio(image, scale=0.4):
-    h, w = image.shape[:2]
-    th = int(h * scale)
-    tw = int(w * scale)
-    return cv2.resize(image, (tw, th))
+def test_search_text(engine, text):
+    results = engine.search_by_text(text, topk=3)
+    print(results)
+    for r in results:
+        image = cv2.imread(r)
+        image = resize_keepratio(image, 1.0)
+        cv2.imshow('image', image)
+        cv2.waitKey(0)
 
 
 if __name__ == '__main__':
-    config_path = 'configs/resnet.yaml'
+    config_path = 'configs/clip.yaml'
     configs = get_config(config_path)
     engine = SearchEngine(configs)
 
-    image_folder = 'D:/data/image_search/00'
-    test_add(engine, image_folder)
+    print('adding ')
+    # image_folder = 'D:/data/image_search'
+    # test_add(engine, image_folder, max_count=1000)
     # image_path = 'data/liuyifei.png'
-    image_path = 'data/sample.jpeg'
-    test_search(engine, image_path)
+    # image_path = 'data/sample.jpeg'
+    # test_search(engine, image_path)
+
+    test_search_text(engine, "girl in dress")
 
     # naive_search('D:/data/image_search/00', './data/liuyifei.png')

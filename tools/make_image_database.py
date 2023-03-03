@@ -23,6 +23,7 @@ def is_image_file(file_name):
 
 
 def make_image_database(image_folder):
+    print(image_folder)
     for root, dirs, files in os.walk(image_folder):
         for name in files:
             if not is_image_file(name):
@@ -44,6 +45,5 @@ def make_image_database(image_folder):
                 shutil.move(file_path, save_path)
 
 
-
 if __name__ == '__main__':
-    make_image_database('D:/data/JPEGImages')
+    make_image_database('D:/data/flickr30k/flickr30k-images')

@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from image_search.models import Resnet50 
+from image_search.models import Resnet50Extractor
 
 
 def feature_similarity(feat1, feat2):
