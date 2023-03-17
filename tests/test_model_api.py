@@ -2,6 +2,7 @@
 test api by sending http requests
 """
 import os
+import cv2
 import json
 import requests
 import base64
@@ -38,6 +39,22 @@ class APITester(object):
         payload = {'image': image_data}
         r = requests.post(url, json.dumps(payload), headers=self.headers)
         print(r.text)
+        r = json.loads(r.text)
+        for image_path in r['message']['image_paths']:
+            image = cv2.imread(image_path)
+            cv2.imshow('image', image)
+            cv2.waitKey(0)
+    
+    def search_text(self):
+        text = 'car'
+        payload = {'text': text, 'topk': 2}
+        url = 'http://{}:{}/img/search'.format(self.base_url, self.port)
+        r = requests.post(url, json.dumps(payload), headers=self.headers)
+        r = json.loads(r.text)
+        for image_path in r['message']['image_paths']:
+            image = cv2.imread(image_path)
+            cv2.imshow('image', image)
+            cv2.waitKey(0)
 
     def file2base64(self, filepath):
         with open(filepath, 'rb') as f:
@@ -50,6 +67,7 @@ def test_api():
     tester = APITester('127.0.0.1', 1088)
     # tester.hello()
     # tester.upload()
+    # tester.search_text()
     tester.search()
 
 
