@@ -48,7 +48,6 @@ class SearchEngine(object):
         return result_paths, distances.tolist()
     
     def save(self):
-        print(INDEX_PATH)
         self.faiss_db.save_index(INDEX_PATH)
         # self.sqlite_db.close()
 

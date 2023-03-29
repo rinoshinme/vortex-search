@@ -5,7 +5,11 @@ import os
 import numpy as np
 import faiss        # save feature vectors
 import sqlite3      # save logo information
-import pickle
+
+
+"""
+FaissID, ImagePath, LogoName
+"""
 
 
 class SqliteDB(object):
@@ -24,7 +28,8 @@ class SqliteDB(object):
         # create table if not exists
         command = "create table if not exists {} ( \
             FaissID integer primary key autoincrement, \
-            ImagePath varchar(1024) \
+            ImagePath varchar(1024), \
+            LogoName varchar(1024) \
         )".format(self.table_name)
 
         cursor.execute(command)
@@ -46,10 +51,10 @@ class SqliteDB(object):
         else:
             return True
     
-    def insert(self, faiss_id, image_path):
+    def insert(self, faiss_id, image_path, logo_name):
         command = "insert into {} values \
-            ({}, \'{}\')".format(
-            self.table_name, faiss_id, image_path)
+            ({}, \'{}\', \'{}\')".format(
+            self.table_name, faiss_id, image_path, logo_name)
         cursor = self.conn.cursor()
         cursor.execute(command)
         self.conn.commit()
@@ -63,7 +68,7 @@ class SqliteDB(object):
         cursor.execute(command)
         results = cursor.fetchall()
         if len(results) > 0:
-            return results[0][1]
+            return results[0][2]  # return the name of the logo
         else:
             return None
     
@@ -80,6 +85,7 @@ class FaissDB(object):
                  feature_dim=2048, 
                  index_type='Flat', 
                  index_path=None):
+        # arcface model feature
         self.feature_dim = feature_dim
         self.index_type = index_type
 
@@ -116,23 +122,14 @@ class FaissDB(object):
             return True
         
         if not is_valid(index_path):
-            # self.index = faiss.index_factory(self.feature_dim, self.index_param, self.metric)
             if self.index_type == 'Flat':
                 self.index = faiss.IndexFlatL2(self.feature_dim)
-            elif self.index_type == 'Binary':
-                self.index = faiss.IndexBinaryFlat(self.feature_dim)
-                # self.index = faiss.IndexBinaryHash(self.feature_dim, self.feature_dim)
             else:
                 raise ValueError("index type not supported yet")
         else:
             self.index = faiss.read_index(index_path)
-            # with open(index_path, 'rb') as f:
-            #     self.index = pickle.load(f)
     
     def save_index(self, index_path):
-        """
-        TODO: 
-        """
         faiss.write_index(self.index, index_path)
     
     def count(self):

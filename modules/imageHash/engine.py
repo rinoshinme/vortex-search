@@ -3,7 +3,7 @@ import numpy as np
 import cv2
 from model import PerceptualHash
 from db_utils import FaissDB, SqliteDB
-
+import pickle
 
 FEATURE_DIM = 64
 INDEX_TYPE = 'Binary'
